@@ -15,24 +15,31 @@ function exibirMenu(){
         {if(opcao === '1'){
         rl.question('Digite aqui o nome do produto:', (nomeProduto) => {
             let nomeMaiusculo = nomeProduto.toUpperCase();
-            if(estoque.includes(nomeMaiusculo)){
+            let posicao = estoque.findIndex(produto => produto.nome === nomeMaiusculo);
+                if(posicao > -1) {
                 console.log('Produto ja existe no estoque');
-            } else {
-                estoque.push(nomeMaiusculo); 
-                    console.log('Produto adicionado ao estoque com sucesso');
+                exibirMenu();
             }
-            exibirMenu();
+            
+                else {
+                rl.question('Qual a quantidade de produto?', (quantidade) =>{
+                    estoque.push({nome: nomeProduto.toUpperCase(), quantidade: quantidade})
+                    console.log('Produto adicionado ao estoque com sucesso');
+                    exibirMenu();
+            })
+             }
         });
         }
+    
     else if(opcao === '2'){
         console.log('Você escolheu listar os produtos');
         console.log('Seus produtos no estoque');
         if(estoque.length === 0){
             console.log('Não tem produtos no estoque');
         } else {
-            {
-               console.log(estoque.join ('-'));
-            }
+          for (let i = 0; i < estoque.length; i++) {
+          console.log(`${i + 1}. Produto: ${estoque[i].nome} | Quantidade: ${estoque[i].quantidade}`);
+        }
         }
         console.log('-------------------');
         exibirMenu();
@@ -40,11 +47,11 @@ function exibirMenu(){
 
     else if(opcao === '3'){
         rl.question('Digite o nome do produto que você deseja editar:', (produtoEditar) => {
-            let posicao = estoque.indexOf(produtoEditar.toUpperCase());
+            let posicao = estoque.findIndex(produto => produto.nome === produtoEditar.toLocaleUpperCase());
             if(posicao > -1){
                 console.log('Produto encontrado no estoque');
                 rl.question('Digite o novo nome do Produto:', (novoProduto) => {
-                    estoque[posicao] = novoProduto.toUpperCase();
+                    estoque[posicao].nome = novoProduto.toUpperCase();
                     console.log('Produto editado');
                     exibirMenu();
                 })
@@ -60,7 +67,7 @@ function exibirMenu(){
     
         else if(opcao === '4'){
             rl.question('Digite o nome do produto que deseja excluir:', (produtoRemover) => {
-            let posicao = estoque.indexOf(produtoRemover.toUpperCase());
+            let posicao = estoque.findIndex(produto => produto.nome === produtoRemover.toUpperCase());
             if(posicao > -1){
                 estoque.splice(posicao,1);  
              console.log('Produto removido!');
