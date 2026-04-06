@@ -5,6 +5,10 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 let estoque = [];
+if (fs.existsSync('estoque.json')) {
+    let dadosDoArquivo = fs.readFileSync('estoque.json', 'utf-8');
+    estoque = JSON.parse(dadosDoArquivo);
+}
 function exibirMenu(){
     console.log('1-Adicionar produto');
     console.log('2-Listar produto');
@@ -81,7 +85,10 @@ function exibirMenu(){
         }
     
      else if(opcao === '5'){
-        console.log('Saindo do sistema');
+        console.log('Salvando backup');
+        let estoqueEmTexto = JSON.stringify(estoque);
+        fs.writeFileSync('estoque.json', estoqueEmTexto);
+        console.log('Backup salvo com sucesso. Saindo do Sistema')
         rl.close();
 }
     else {
