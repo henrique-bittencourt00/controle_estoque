@@ -8,6 +8,7 @@ let estoque = [];
 function exibirMenu(){
     console.log('1-Adicionar produto');
     console.log('2-Listar produto');
+    console.log('3-Editar produto');
     console.log('4-Excluir produto');
     console.log('5-Sair');
     rl.question('Escolha uma opção:', (opcao) =>
@@ -35,6 +36,26 @@ function exibirMenu(){
         }
         console.log('-------------------');
         exibirMenu();
+    }
+
+    else if(opcao === '3'){
+        rl.question('Digite o nome do produto que você deseja editar:', (produtoEditar) => {
+            let posicao = estoque.indexOf(produtoEditar.toUpperCase());
+            if(posicao > -1){
+                console.log('Produto encontrado no estoque');
+                rl.question('Digite o novo nome do Produto:', (novoProduto) => {
+                    estoque[posicao] = novoProduto.toUpperCase();
+                    console.log('Produto editado');
+                    exibirMenu();
+                })
+            }
+            else {
+                console.log('Produto não encontrado no estoque'); 
+                 exibirMenu();
+
+             }
+            
+        })
     }
     
         else if(opcao === '4'){
