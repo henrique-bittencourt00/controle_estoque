@@ -5,9 +5,37 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 let estoque = [];
-if (fs.existsSync('estoque.json')) {
-    let dadosDoArquivo = fs.readFileSync('estoque.json', 'utf-8');
-    estoque = JSON.parse(dadosDoArquivo);
+function adicionarProduto(nome,quantidade){
+    let nomeMaiusculo = nome.toUpperCase();
+    let posicao = estoque.findIndex(produto => produto.nome === nomeMaiusculo);
+
+    if (posicao > -1){
+        return false;
+    } else {
+        estoque.push({ nome: nomeMaiusculo, quantidade: quantidade});
+        return true;
+    }
+}
+function editarProduto (nomeAntigo, novoNome) {
+    let posicao = estoque.findIndex(produto => produto.nome === nomeAntigo.toLocaleUpperCase)
+    
+    if (posicao > -1){
+        estoque[posicao].nome = novoNome.toLocaleUpperCase();
+        return true;
+    } else {
+        return false;
+    }
+}
+function excluirProduto(nomeRemover){
+    let nomeMaiusculo = nomeRemover.toUpperCase();
+    let posicao = estoque.findIndex(produto => produto.nome === nomeMaiusculo);
+    if(posicao > -1){
+        estoque.splice(posicao,1);
+        return true;
+    } else{
+        return false;
+    }
+    
 }
 function exibirMenu(){
     console.log('1-Adicionar produto');
@@ -15,25 +43,23 @@ function exibirMenu(){
     console.log('3-Editar produto');
     console.log('4-Excluir produto');
     console.log('5-Sair');
-    rl.question('Escolha uma opção:', (opcao) =>
-        {if(opcao === '1'){
-        rl.question('Digite aqui o nome do produto:', (nomeProduto) => {
-            let nomeMaiusculo = nomeProduto.toUpperCase();
-            let posicao = estoque.findIndex(produto => produto.nome === nomeMaiusculo);
-                if(posicao > -1) {
-                console.log('Produto ja existe no estoque');
-                exibirMenu();
-            }
-            
-                else {
-                rl.question('Qual a quantidade de produto?', (quantidade) =>{
-                    estoque.push({nome: nomeProduto.toUpperCase(), quantidade: quantidade})
-                    console.log('Produto adicionado ao estoque com sucesso');
-                    exibirMenu();
-            })
-             }
-        });
+    rl.question('Escolha uma opção:', (opcao) => {
+        if (opcao === '1') {
+            rl.question('Digite aqui o nome do produto: ', (nomeProduto) => {
+                rl.question('Qual a quantidade do produto? ', (quantidade) => {
+                    let sucesso = adicionarProduto(nomeProduto, quantidade);
+
+                    if (sucesso) {
+                        console.log('Produto adicionado ao estoque com sucesso!');
+                    } else {
+                        console.log('Produto já existe no estoque.');
+                    }
+                    
+                    exibirMenu(); 
+                });
+            });
         }
+    
     
     else if(opcao === '2'){
         console.log('Você escolheu listar os produtos');
@@ -50,23 +76,17 @@ function exibirMenu(){
     }
 
     else if(opcao === '3'){
-        rl.question('Digite o nome do produto que você deseja editar:', (produtoEditar) => {
-            let posicao = estoque.findIndex(produto => produto.nome === produtoEditar.toLocaleUpperCase());
-            if(posicao > -1){
-                console.log('Produto encontrado no estoque');
-                rl.question('Digite o novo nome do Produto:', (novoProduto) => {
-                    estoque[posicao].nome = novoProduto.toUpperCase();
-                    console.log('Produto editado');
+            rl.question('Digite o nome do produto que você deseja editar: ', (produtoEditar) =>{
+                rl.question('Digite o novo nome do produto:', (novoNome) => {
+                    let sucesso = editarProduto(produtoEditar, novoNome);
+                    if(sucesso){
+                        console.log('Produto editado com sucesso');
+                    } else {
+                        console.log('Produto não encontrado no estoque');
+                    }
                     exibirMenu();
-                })
-            }
-            else {
-                console.log('Produto não encontrado no estoque'); 
-                 exibirMenu();
-
-             }
-            
-        })
+                });
+            });
     }
     
         else if(opcao === '4'){
@@ -98,3 +118,4 @@ function exibirMenu(){
 });
 }
 exibirMenu();
+module.exports = {adicionarProduto, editarProduto, estoque};
