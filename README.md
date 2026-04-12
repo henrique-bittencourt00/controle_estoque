@@ -16,7 +16,7 @@ Executar o projeto
 
 Testes do projeto
 
-1. npm test
+1. npm test 
 2. npm run lint
 
    
