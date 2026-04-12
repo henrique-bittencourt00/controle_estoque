@@ -17,8 +17,7 @@ function adicionarProduto(nome,quantidade){
     }
 }
 function editarProduto (nomeAntigo, novoNome) {
-    let posicao = estoque.findIndex(produto => produto.nome === nomeAntigo.toLocaleUpperCase)
-    
+    let posicao = estoque.findIndex(produto => produto.nome === nomeAntigo.toLocaleUpperCase())   
     if (posicao > -1){
         estoque[posicao].nome = novoNome.toLocaleUpperCase();
         return true;
@@ -26,16 +25,17 @@ function editarProduto (nomeAntigo, novoNome) {
         return false;
     }
 }
-function excluirProduto(nomeRemover){
-    let nomeMaiusculo = nomeRemover.toUpperCase();
-    let posicao = estoque.findIndex(produto => produto.nome === nomeMaiusculo);
-    if(posicao > -1){
-        estoque.splice(posicao,1);
-        return true;
-    } else{
-        return false;
+function excluirProduto(nomeProduto) {
+    let posicao = estoque.findIndex(produto => produto.nome === nomeProduto.toUpperCase());
+    if (posicao > -1) {
+        estoque.splice(posicao, 1);  
+        return true; 
+    } else {
+        return false; 
     }
-    
+}
+function listarProduto(){
+    return estoque;
 }
 function exibirMenu(){
     console.log('1-Adicionar produto');
@@ -64,11 +64,14 @@ function exibirMenu(){
     else if(opcao === '2'){
         console.log('Você escolheu listar os produtos');
         console.log('Seus produtos no estoque');
+
+        let lista = listarProduto();
+
         if(estoque.length === 0){
             console.log('Não tem produtos no estoque');
         } else {
           for (let i = 0; i < estoque.length; i++) {
-          console.log(`${i + 1}. Produto: ${estoque[i].nome} | Quantidade: ${estoque[i].quantidade}`);
+          console.table(lista);
         }
         }
         console.log('-------------------');
@@ -90,19 +93,19 @@ function exibirMenu(){
     }
     
         else if(opcao === '4'){
-            rl.question('Digite o nome do produto que deseja excluir:', (produtoRemover) => {
-            let posicao = estoque.findIndex(produto => produto.nome === produtoRemover.toUpperCase());
-            if(posicao > -1){
-                estoque.splice(posicao,1);  
-             console.log('Produto removido!');
-            }    
-             else {
-            console.log ('Produto não encontrado no estoque');
-           
-                }
-            exibirMenu();
-            })
+          rl.question('Digite o nome do produto que deseja excluir:', (produtoRemover => {
+            let sucesso = excluirProduto(produtoRemover);
+            if (sucesso){
+                console.log('Produto removido');
+            } else{
+                console.log('Produto não encontrado no estoque');
+            }
+                exibirMenu();
+  
+        }));
         }
+        
+        
     
      else if(opcao === '5'){
         console.log('Salvando backup');
@@ -117,5 +120,7 @@ function exibirMenu(){
     }
 });
 }
-exibirMenu();
-module.exports = {adicionarProduto, editarProduto, estoque};
+if (require.main === module) {
+    exibirMenu();
+}
+module.exports = {adicionarProduto, rl, editarProduto, listarProduto, excluirProduto, estoque};
