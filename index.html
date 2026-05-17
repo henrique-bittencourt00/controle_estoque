@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Estoque Profissional</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📦 Controle de Estoque</h1>
+
+        <div class="card">
+            <h3>Novo Produto</h3>
+            <div class="form-group">
+                <input type="text" id="nomeProduto" placeholder="Nome do Produto">
+                <input type="number" id="qtdProduto" placeholder="Quantidade">
+                <div class="cep-container">
+                    <input type="text" id="cepFornecedor" placeholder="CEP do Fornecedor">
+                    <button id="btnBuscarCep">Buscar Endereço</button>
+                </div>
+                <p id="infoEndereco" class="info-text"></p>
+                <button id="btnAdicionar" class="btn-success">Adicionar ao Estoque</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Itens Cadastrados</h3>
+            <table id="tabelaEstoque">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Qtd</th>
+                        <th>Fornecedor/Cidade</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabela">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
