@@ -19,4 +19,7 @@ Testes do projeto
 1. npm test  
 2. npm run lint
 
+link do deploy 
+https://henrique-bittencourt00.github.io/controle_estoque/
+
    
