@@ -106,33 +106,6 @@ async function buscarEndereco() {
     }
 }
 
-function adicionarProduto() {
-    const nome = nomeProdutoInput.value.trim();
-    const quantidade = qtdProdutoInput.value.trim();
-
-    if (!validarProduto(nome, quantidade)) {
-        return;
-    }
-
-    const nomeMaiusculo = nome.toUpperCase();
-    const existe = estoque.some((item) => item.nome === nomeMaiusculo);
-
-    if (existe) {
-        mostrarMensagem('Produto já existe no estoque.', 'red');
-        return;
-    }
-
-    const fornecedor = infoEndereco.innerText.startsWith('Endereço:')
-        ? infoEndereco.innerText.replace('Endereço: ', '')
-        : 'Não informado';
-
-    estoque.push({ nome: nomeMaiusculo, quantidade, fornecedor });
-    atualizarLocalStorage();
-    renderizarTabela();
-    limparFormulario();
-    mostrarMensagem('Produto adicionado ao estoque com sucesso!', 'green');
-}
-
 document.getElementById('btnBuscarCep').addEventListener('click', buscarEndereco);
 document.getElementById('btnAdicionar').addEventListener('click', adicionarProduto);
 
