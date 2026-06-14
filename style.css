@@ -1,15 +1,89 @@
-body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; display: flex; justify-content: center; }
-.container { width: 90%; max-width: 800px; margin-top: 50px; }
-h1 { color: #2c3e50; text-align: center; }
-.card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
-.form-group { display: flex; flex-direction: column; gap: 10px; }
-input { padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
-.cep-container { display: flex; gap: 5px; }
-button { cursor: pointer; padding: 10px; border: none; border-radius: 4px; transition: 0.3s; }
-.btn-success { background-color: #27ae60; color: white; font-weight: bold; }
-.btn-success:hover { background-color: #219150; }
-#btnBuscarCep { background-color: #3498db; color: white; }
-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
-th { background-color: #f8f9fa; }
-.info-text { font-size: 0.85em; color: #7f8c8d; font-style: italic; }
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin-top: 50px;
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.cep-container {
+    display: flex;
+    gap: 5px;
+}
+
+button {
+    cursor: pointer;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.btn-success {
+    background-color: #27ae60;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-success:hover {
+    background-color: #219150;
+}
+
+#btnBuscarCep {
+    background-color: #3498db;
+    color: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+th {
+    background-color: #f8f9fa;
+}
+
+.info-text {
+    font-size: 0.85em;
+    color: #7f8c8d;
+    font-style: italic;
+}
