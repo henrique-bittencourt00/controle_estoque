@@ -1,6 +1,3 @@
-const SUPABASE_URL = 'https://kavbbgkglxgbczxlxesd.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthdmJiZ2tnbHhnYmN6eGx4ZXNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDU2NzgsImV4cCI6MjA5NzAyMTY3OH0.Na9ESFr-nummMBuCm-a--7L3ILFLhhyZfPCSn4JWPsM';
-
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function listarProdutos() {
