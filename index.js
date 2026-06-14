@@ -1,5 +1,6 @@
 const readline = require('readline');
 const fs = require('fs');
+const { listarProduto } = require('./estoqueRepo');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -34,9 +35,6 @@ function excluirProduto(nomeProduto) {
         return false; 
     }
 }
-function listarProduto(){
-    return estoque;
-}
 function exibirMenu(){
     console.log('1-Adicionar produto');
     console.log('2-Listar produto');
@@ -62,20 +60,20 @@ function exibirMenu(){
     
     
     else if(opcao === '2'){
-        console.log('Você escolheu listar os produtos');
-        console.log('Seus produtos no estoque');
+        (async () => {
+            console.log('Você escolheu listar os produtos');
+            console.log('Seus produtos no estoque');
 
-        let lista = listarProduto();
+            let lista = await listarProduto();
 
-        if(estoque.length === 0){
-            console.log('Não tem produtos no estoque');
-        } else {
-          for (let i = 0; i < estoque.length; i++) {
-          console.table(lista);
-        }
-        }
-        console.log('-------------------');
-        exibirMenu();
+            if(lista.length === 0){
+                console.log('Não tem produtos no estoque');
+            } else {
+                console.table(lista);
+            }
+            console.log('-------------------');
+            exibirMenu();
+        })();
     }
 
     else if(opcao === '3'){
@@ -123,4 +121,4 @@ function exibirMenu(){
 if (require.main === module) {
     exibirMenu();
 }
-module.exports = {adicionarProduto, rl, editarProduto, listarProduto, excluirProduto, estoque};
+module.exports = {adicionarProduto, rl, editarProduto, excluirProduto, estoque};
