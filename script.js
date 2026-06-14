@@ -6,7 +6,7 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 async function listarProdutos() {
     const { data, error } = await db
         .from('produtos')
-        .select('nome, quantidade')
+        .select('id, nome, quantidade')
         .order('nome', { ascending: true });
 
     if (error) {
@@ -32,10 +32,35 @@ function renderizarTabela(produtos) {
             <td>${p.nome}</td>
             <td>${p.quantidade}</td>
             <td>${p.cidade || '-'}</td>
-            <td><button onclick="excluirProduto('${p.nome}')">Excluir</button></td>
+            <td><button onclick="excluirProduto('${p.nome}')" class="btn-delet">Excluir</button>
+                <button onclick="editarProduto('${p.id}', '${p.nome}')" class="btn-edit">Editar</button>
+            </td>
+            
         `;
         tbody.appendChild(tr);
     });
+}
+
+function renderizarModal(titulo, mensagem, acaoConfirmar) {
+    const modal = document.getElementById('modal');
+    document.getElementById('modalTitulo').innerText = titulo;
+    document.getElementById('modalMensagem').innerText = mensagem;
+
+    const btnConfirmar = document.getElementById('modalConfirmar');
+
+    const novoBtnConfirmar = btnConfirmar.cloneNode(true);
+    btnConfirmar.parentNode.replaceChild(novoBtnConfirmar, btnConfirmar);
+
+    novoBtnConfirmar.addEventListener('click', () => {
+        fecharModal();
+        await acaoConfirmar();
+    });
+
+    modal.style.display = 'flex';
+}
+
+function fecharModal() {
+    document.getElementById('modal').style.display = 'none';
 }
 
 async function adicionarProduto() {
@@ -62,6 +87,10 @@ async function adicionarProduto() {
     campoInfo.textContent = '';
 
     await listarProdutos();
+}
+
+async function editarProduto(id) {
+    
 }
 
 async function excluirProduto(nome) {
