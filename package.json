@@ -15,5 +15,8 @@
     "eslint": "^8.57.1",
     "jest": "^30.3.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@supabase/supabase-js": "^2.108.1",
+    "dotenv": "^17.4.2"
+  }
 }
