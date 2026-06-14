@@ -32,7 +32,7 @@ function renderizarTabela(produtos) {
             <td>${p.nome}</td>
             <td>${p.quantidade}</td>
             <td>${p.cidade || '-'}</td>
-            <td><button onclick="excluirProduto('${p.nome}')" class="btn-delet">Excluir</button>
+            <td><button onclick="excluirProduto('${p.id}', '${p.nome}')" class="btn-delet">Excluir</button>
                 <button onclick="editarProduto('${p.id}', '${p.nome}', '${p.quantidade}')" class="btn-edit">Editar</button>
             </td>
             
@@ -43,15 +43,15 @@ function renderizarTabela(produtos) {
 
 function renderizarModal(titulo, conteudoHTML, acaoConfirmar) {
     const modal = document.getElementById('modal');
-    document.getElementById('modalTitulo').innerText = titulo;
+    document.getElementById('modalTitle').innerText = titulo;
     document.getElementById('modalBodyText').innerHTML = conteudoHTML;
 
-    const btnConfirmar = document.getElementById('modalConfirmar');
+    const btnConfirmar = document.getElementById('btnModalConfirmar');
 
     const novoBtnConfirmar = btnConfirmar.cloneNode(true);
     btnConfirmar.parentNode.replaceChild(novoBtnConfirmar, btnConfirmar);
 
-    novoBtnConfirmar.addEventListener('click', () => {
+    novoBtnConfirmar.addEventListener('click', async () => {
         const sucesso = await acaoConfirmar();
         if (sucesso !== false) {
             fecharModal();
@@ -91,19 +91,64 @@ async function adicionarProduto() {
     await listarProdutos();
 }
 
-async function editarProduto(id) {
+// Só salva no banco
+async function salvarEdicao(idProduto) {
+    const novoNome = document.getElementById('editNome').value.trim().toUpperCase();
+    const novaQtd = document.getElementById('editQtd').value.trim();
 
+    if (!novoNome || !novaQtd) {
+        alert('⚠️ Por favor, preencha o nome e a quantidade.');
+        return false;
+    }
+    const { error } = await db.from('produtos')
+        .update({ nome: novoNome, quantidade: novaQtd })
+        .eq('id', idProduto);
+    if (error) {
+        alert('❌ Erro ao editar produto: ' + error.message);
+        return true;
+    }
+    alert('✅ Produto atualizado com sucesso!');
+    await listarProdutos();
+    return true;
 }
 
-async function excluirProduto(nome) {
-    const { error } = await db.from('produtos').delete().eq('nome', nome);
+// Só monta o modal e chama a função pra salvar
+function editarProduto(idProduto, nomeAtual, qtdAtual) {
+    const formHTML = `
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <label style="font-weight: bold; color: #333;">Nome do Produto:</label>
+            <input type="text" id="editNome" value="${nomeAtual}" class="modal-input">
+            
+            <label style="font-weight: bold; color: #333; margin-top: 10px;">Quantidade em Estoque:</label>
+            <input type="number" id="editQtd" value="${qtdAtual}" class="modal-input">
+        </div>
+    `;
 
-    if (error) {
-        console.error('Erro ao excluir:', error.message);
-        return;
-    }
+    // Renderiza o modal
+    renderizarModal(
+        'Editar Produto',
+        formHTML,
+        () => salvarEdicao(idProduto)
+    );
+}
 
-    await listarProdutos();
+function excluirProduto(idProduto, nome) {
+    renderizarModal(
+        'Confirmar Exclusão',
+        `Tem a certeza que deseja excluir o produto "${nome}"?`,
+        async () => {
+            const { error } = await db.from('produtos').delete().eq('id', idProduto);
+
+            if (error) {
+                alert('Erro ao excluir produto: ' + error.message);
+                return true;
+            }
+
+            alert('✅ Produto removido com sucesso!');
+            await listarProdutos();
+            return true;
+        }
+    );
 }
 
 async function buscarEndereco() {
@@ -128,12 +173,6 @@ async function buscarEndereco() {
     } catch (error) {
         campoInfo.innerText = 'Erro ao buscar o endereço. Verifique sua conexão.';
         campoInfo.style.color = 'red';
-    }
-
-    try {
-        mostrarMensagem(`Endereço: ${dados.logradouro}, ${dados.bairro} - ${dados.localidade}/${dados.uf}`, 'green');
-    } catch (error) {
-        mostrarMensagem('Erro ao buscar o endereço. Verifique sua conexão.', 'red');
     }
 }
 

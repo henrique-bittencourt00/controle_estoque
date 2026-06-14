@@ -190,6 +190,21 @@ th {
     background-color: #c9302c;
 }
 
+.modal-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.modal-input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
 @keyframes abrirModalAnim {
     from {
         opacity: 0;
