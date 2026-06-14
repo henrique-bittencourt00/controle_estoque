@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "lint": "eslint index.js index.test.js"
+    "lint": "eslint index.js estoqueService.js db/estoqueRepo.js index.test.js"
   },
   "keywords": [],
   "author": "",
@@ -14,5 +14,6 @@
   "devDependencies": {
     "eslint": "^8.57.1",
     "jest": "^30.3.0"
-  }
+  },
+  "dependencies": {}
 }
