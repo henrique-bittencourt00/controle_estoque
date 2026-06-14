@@ -71,7 +71,7 @@ async function adicionarProduto() {
     const campoInfo = document.getElementById('infoEndereco');
 
     if (!nome || !quantidade) {
-        alert('Preencha o nome e a quantidade.');
+        Swal.fire('Atenção!', 'Preencha o nome e a quantidade.', 'warning');
         return;
     }
 
@@ -79,9 +79,11 @@ async function adicionarProduto() {
 
     if (error) {
         console.error('Erro ao adicionar:', error.message);
-        alert('Erro ao adicionar produto: ' + error.message);
+        Swal.fire('Erro!', 'Erro ao adicionar produto: ' + error.message, 'error');
         return;
     }
+
+    Swal.fire('Sucesso!', 'Produto adicionado com sucesso!', 'success');
 
     document.getElementById('nomeProduto').value = '';
     document.getElementById('qtdProduto').value = '';
@@ -97,19 +99,22 @@ async function salvarEdicao(idProduto) {
     const novaQtd = document.getElementById('editQtd').value.trim();
 
     if (!novoNome || !novaQtd) {
-        alert('⚠️ Por favor, preencha o nome e a quantidade.');
+        Swal.fire('Atenção!', 'Por favor, preencha o nome e a quantidade.', 'warning');
         return false;
     }
     const { error } = await db.from('produtos')
         .update({ nome: novoNome, quantidade: novaQtd })
         .eq('id', idProduto);
+
     if (error) {
-        alert('❌ Erro ao editar produto: ' + error.message);
+        Swal.fire('Erro!', 'Erro ao editar produto: ' + error.message, 'error');
         return true;
     }
-    alert('✅ Produto atualizado com sucesso!');
-    await listarProdutos();
+
+
+    Swal.fire('Feito!', 'Produto atualizado com sucesso!', 'success');
     return true;
+    await listarProdutos();
 }
 
 // Só monta o modal e chama a função pra salvar
@@ -140,11 +145,11 @@ function excluirProduto(idProduto, nome) {
             const { error } = await db.from('produtos').delete().eq('id', idProduto);
 
             if (error) {
-                alert('Erro ao excluir produto: ' + error.message);
+                Swal.fire('Erro!', 'Erro ao excluir produto: ' + error.message, 'error');
                 return true;
             }
 
-            alert('✅ Produto removido com sucesso!');
+            Swal.fire('Apagado!', 'Produto removido com sucesso!', 'success');
             await listarProdutos();
             return true;
         }
