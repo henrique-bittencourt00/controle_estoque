@@ -1,12 +1,49 @@
 const readline = require('readline');
+<<<<<<< HEAD
 const estoqueService = require('./estoqueService');
 
+=======
+const fs = require('fs');
+const { listarProduto: listarProdutoSupabase } = require('./estoqueRepo');
+>>>>>>> a0eb4736019675afc4393a76cf67cd1b14ff3cef
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
 });
 
+<<<<<<< HEAD
 function exibirMenu() {
+=======
+    if (posicao > -1){
+        return false;
+    } else {
+        estoque.push({ nome: nomeMaiusculo, quantidade: quantidade});
+        return true;
+    }
+}
+function editarProduto (nomeAntigo, novoNome) {
+    let posicao = estoque.findIndex(produto => produto.nome === nomeAntigo.toLocaleUpperCase())   
+    if (posicao > -1){
+        estoque[posicao].nome = novoNome.toLocaleUpperCase();
+        return true;
+    } else {
+        return false;
+    }
+}
+function listarProduto() {
+    return estoque;
+}
+function excluirProduto(nomeProduto) {
+    let posicao = estoque.findIndex(produto => produto.nome === nomeProduto.toUpperCase());
+    if (posicao > -1) {
+        estoque.splice(posicao, 1);  
+        return true; 
+    } else {
+        return false; 
+    }
+}
+function exibirMenu(){
+>>>>>>> a0eb4736019675afc4393a76cf67cd1b14ff3cef
     console.log('1-Adicionar produto');
     console.log('2-Listar produto');
     console.log('3-Editar produto');
@@ -69,12 +106,33 @@ function exibirMenu() {
         } else {
             console.log('Opção inexistente, tente novamente');
             exibirMenu();
+<<<<<<< HEAD
         }
     });
+=======
+        })();
+    }
+
+        exibirMenu();
+      });
+    } else if (opcao === '5') {
+      estoqueService.salvarEstoque();
+      console.log('Backup salvo com sucesso. Saindo do sistema.');
+      rl.close();
+    } else {
+      console.log('Opção inexistente, tente novamente');
+      exibirMenu();
+    }
+  });
+>>>>>>> a0eb4736019675afc4393a76cf67cd1b14ff3cef
 }
 
 if (require.main === module) {
     exibirMenu();
 }
+<<<<<<< HEAD
 
 module.exports = { rl };
+=======
+module.exports = {adicionarProduto, listarProduto, rl, editarProduto, excluirProduto, estoque};
+>>>>>>> a0eb4736019675afc4393a76cf67cd1b14ff3cef
