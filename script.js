@@ -33,7 +33,7 @@ function renderizarTabela(produtos) {
             <td>${p.quantidade}</td>
             <td>${p.cidade || '-'}</td>
             <td><button onclick="excluirProduto('${p.nome}')" class="btn-delet">Excluir</button>
-                <button onclick="editarProduto('${p.id}', '${p.nome}')" class="btn-edit">Editar</button>
+                <button onclick="editarProduto('${p.id}', '${p.nome}', '${p.quantidade}')" class="btn-edit">Editar</button>
             </td>
             
         `;
@@ -41,10 +41,10 @@ function renderizarTabela(produtos) {
     });
 }
 
-function renderizarModal(titulo, mensagem, acaoConfirmar) {
+function renderizarModal(titulo, conteudoHTML, acaoConfirmar) {
     const modal = document.getElementById('modal');
     document.getElementById('modalTitulo').innerText = titulo;
-    document.getElementById('modalMensagem').innerText = mensagem;
+    document.getElementById('modalBodyText').innerHTML = conteudoHTML;
 
     const btnConfirmar = document.getElementById('modalConfirmar');
 
@@ -52,8 +52,10 @@ function renderizarModal(titulo, mensagem, acaoConfirmar) {
     btnConfirmar.parentNode.replaceChild(novoBtnConfirmar, btnConfirmar);
 
     novoBtnConfirmar.addEventListener('click', () => {
-        fecharModal();
-        await acaoConfirmar();
+        const sucesso = await acaoConfirmar();
+        if (sucesso !== false) {
+            fecharModal();
+        }
     });
 
     modal.style.display = 'flex';
@@ -90,7 +92,7 @@ async function adicionarProduto() {
 }
 
 async function editarProduto(id) {
-    
+
 }
 
 async function excluirProduto(nome) {
