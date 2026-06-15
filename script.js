@@ -3,7 +3,7 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 async function listarProdutos() {
     const { data, error } = await db
         .from('produtos')
-        .select('nome, quantidade')
+        .select('id, nome, quantidade')
         .order('nome', { ascending: true });
 
     if (error) {
@@ -29,10 +29,37 @@ function renderizarTabela(produtos) {
             <td>${p.nome}</td>
             <td>${p.quantidade}</td>
             <td>${p.cidade || '-'}</td>
-            <td><button onclick="excluirProduto('${p.nome}')">Excluir</button></td>
+            <td><button onclick="excluirProduto('${p.id}', '${p.nome}')" class="btn-delet">Excluir</button>
+                <button onclick="editarProduto('${p.id}', '${p.nome}', '${p.quantidade}')" class="btn-edit">Editar</button>
+            </td>
+            
         `;
         tbody.appendChild(tr);
     });
+}
+
+function renderizarModal(titulo, conteudoHTML, acaoConfirmar) {
+    const modal = document.getElementById('modal');
+    document.getElementById('modalTitle').innerText = titulo;
+    document.getElementById('modalBodyText').innerHTML = conteudoHTML;
+
+    const btnConfirmar = document.getElementById('btnModalConfirmar');
+
+    const novoBtnConfirmar = btnConfirmar.cloneNode(true);
+    btnConfirmar.parentNode.replaceChild(novoBtnConfirmar, btnConfirmar);
+
+    novoBtnConfirmar.addEventListener('click', async () => {
+        const sucesso = await acaoConfirmar();
+        if (sucesso !== false) {
+            fecharModal();
+        }
+    });
+
+    modal.style.display = 'flex';
+}
+
+function fecharModal() {
+    document.getElementById('modal').style.display = 'none';
 }
 
 async function adicionarProduto() {
@@ -41,7 +68,7 @@ async function adicionarProduto() {
     const campoInfo = document.getElementById('infoEndereco');
 
     if (!nome || !quantidade) {
-        alert('Preencha o nome e a quantidade.');
+        Swal.fire('Atenção!', 'Preencha o nome e a quantidade.', 'warning');
         return;
     }
 
@@ -49,9 +76,11 @@ async function adicionarProduto() {
 
     if (error) {
         console.error('Erro ao adicionar:', error.message);
-        alert('Erro ao adicionar produto: ' + error.message);
+        Swal.fire('Erro!', 'Erro ao adicionar produto: ' + error.message, 'error');
         return;
     }
+
+    Swal.fire('Sucesso!', 'Produto adicionado com sucesso!', 'success');
 
     document.getElementById('nomeProduto').value = '';
     document.getElementById('qtdProduto').value = '';
@@ -61,15 +90,67 @@ async function adicionarProduto() {
     await listarProdutos();
 }
 
-async function excluirProduto(nome) {
-    const { error } = await db.from('produtos').delete().eq('nome', nome);
+// Só salva no banco
+async function salvarEdicao(idProduto) {
+    const novoNome = document.getElementById('editNome').value.trim().toUpperCase();
+    const novaQtd = document.getElementById('editQtd').value.trim();
+
+    if (!novoNome || !novaQtd) {
+        Swal.fire('Atenção!', 'Por favor, preencha o nome e a quantidade.', 'warning');
+        return false;
+    }
+    const { error } = await db.from('produtos')
+        .update({ nome: novoNome, quantidade: novaQtd })
+        .eq('id', idProduto);
 
     if (error) {
-        console.error('Erro ao excluir:', error.message);
-        return;
+        Swal.fire('Erro!', 'Erro ao editar produto: ' + error.message, 'error');
+        return true;
     }
 
+
+    Swal.fire('Feito!', 'Produto atualizado com sucesso!', 'success');
+    return true;
     await listarProdutos();
+}
+
+// Só monta o modal e chama a função pra salvar
+function editarProduto(idProduto, nomeAtual, qtdAtual) {
+    const formHTML = `
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <label style="font-weight: bold; color: #333;">Nome do Produto:</label>
+            <input type="text" id="editNome" value="${nomeAtual}" class="modal-input">
+            
+            <label style="font-weight: bold; color: #333; margin-top: 10px;">Quantidade em Estoque:</label>
+            <input type="number" id="editQtd" value="${qtdAtual}" class="modal-input">
+        </div>
+    `;
+
+    // Renderiza o modal
+    renderizarModal(
+        'Editar Produto',
+        formHTML,
+        () => salvarEdicao(idProduto)
+    );
+}
+
+function excluirProduto(idProduto, nome) {
+    renderizarModal(
+        'Confirmar Exclusão',
+        `Tem a certeza que deseja excluir o produto "${nome}"?`,
+        async () => {
+            const { error } = await db.from('produtos').delete().eq('id', idProduto);
+
+            if (error) {
+                Swal.fire('Erro!', 'Erro ao excluir produto: ' + error.message, 'error');
+                return true;
+            }
+
+            Swal.fire('Apagado!', 'Produto removido com sucesso!', 'success');
+            await listarProdutos();
+            return true;
+        }
+    );
 }
 
 async function buscarEndereco() {
@@ -94,12 +175,6 @@ async function buscarEndereco() {
     } catch (error) {
         campoInfo.innerText = 'Erro ao buscar o endereço. Verifique sua conexão.';
         campoInfo.style.color = 'red';
-    }
-
-    try {
-        mostrarMensagem(`Endereço: ${dados.logradouro}, ${dados.bairro} - ${dados.localidade}/${dados.uf}`, 'green');
-    } catch (error) {
-        mostrarMensagem('Erro ao buscar o endereço. Verifique sua conexão.', 'red');
     }
 }
 

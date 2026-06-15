@@ -43,8 +43,24 @@
         </div>
     </div>
 
+    <div id="modal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="modalTitle">Título do Modal</h3>
+                <span class="close-btn" onclick="fecharModal()">X</span>
+            </div>
+            <div class="modal-body">
+                <p id="modalBodyText">Conteúdo informativo aqui...</p>
+            </div>
+            <div class="modal-footer">
+                <button id="btnModalCancelar" class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+                <button id="btnModalConfirmar" class="btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
 </body>
 
